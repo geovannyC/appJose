@@ -9,7 +9,7 @@ router.get("/home",(req, res)=>{
     
 })
 
-router.get("/recuperar/:email/:contra", (req, res)=>{
+router.get("/login/:email/:contra", (req, res)=>{
     const email = req.params.email;
     const contra = req.params.contra;
     usuario.formatoUsuario.findAll({
