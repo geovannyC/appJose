@@ -1,61 +1,52 @@
+require('dotenv').config()
 const express = require('express');
 const router = express.Router();
 const usuario = require('../db/request')
 var path = require('path');
+
 router.get("/home",(req, res)=>{
-    res.sendFile(path.join(__dirname, '../web/registro.html'))
+    res.json('casa')
     
 })
-router.get("/principal",(req, res)=>{
-    res.sendFile(path.join(__dirname, '../web/home.html'))
-    
-})
-router.get("/recuperar/:productID", (req, res)=>{
-    const my = req.params.productID;
-    console.log('funciono')
+
+router.get("/recuperar/:email/:contra", (req, res)=>{
+    const email = req.params.email;
+    const contra = req.params.contra;
     usuario.formatoUsuario.findAll({
-        
-    }).then(libro => {
-        try{
-            console.log("All users:", JSON.stringify(libro));
-            res.status(200)
-            res.json(libro)
-        }catch{
-            console.log('error')
+        where: {
+            email: email,
+            contraseña: contra
         }
+    }).then(libro => {
+        JSON.stringify(libro)===JSON.stringify([])?res.json('no hay usuario'):res.json(libro)
         
       });
 })
-router.get('/login/:usr1/:usr2/:usr3/:usr4/:usr5/:usr6',(req,res)=>{
+router.get('/register/:usr1/:usr2/:usr3/:usr4',(req,res)=>{
     let nombreUsr = req.params.usr1
     let apellidoUsr = req.params.usr2
-    let telefonoUsr = req.params.usr3
-    let ciudadUsr = req.params.usr4
-    let correo_electUsr = req.params.usr5
-    let contraseñaUsr = req.params.usr6
+    let emaiUsr = req.params.usr3
+    let contraseñaUsr = req.params.usr4
     let datos = {
         nombre: nombreUsr,
         apellido: apellidoUsr,
-        telefono: telefonoUsr,
-        ciudad: ciudadUsr,
-        correo_elect: correo_electUsr,
+        email: emaiUsr,
         contraseña: contraseñaUsr
     }
-    console.log('dos')
     usuario.formatoUsuario.create(datos).then(jane => {
         res.status(200)
         res.json(jane)
       });
 })
-router.post('/destruir/:destruirID',(req,res)=>{
-    const my = req.params.destruirID;
-    usuario.formatoUsuario.destroy({
-        where: {
-          id: my
-        }
-      }).then(destr => {
-        res.json('EXTERMINADO')
-      });
+// router.post('/destruir/:destruirID',(req,res)=>{
+//     const my = req.params.destruirID;
+//     usuario.formatoUsuario.destroy({
+//         where: {
+//           id: my
+//         }
+//       }).then(destr => {
+//         res.json('EXTERMINADO')
+//       });
       
-})
+// })
 module.exports = router;

@@ -24,3 +24,4 @@ sequelize
   {
     timestamps: false
 })
+exports.formatoUsuario = formatoUsuario;
